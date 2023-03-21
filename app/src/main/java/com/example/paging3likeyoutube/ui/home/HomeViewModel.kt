@@ -15,7 +15,7 @@ class HomeViewModel : ViewModel() {
         return mutableListOf(
             PostUIItem(
                 0,
-                "https://dzqwwyjh5mag2.cloudfront.net/post_media/cf1b2175-ca7a-4a1c-96d6-da7735c8edaa.mp4",
+                "https://d1hni3q7o8jhnx.cloudfront.net/post_media/b7d96924-b70b-4f34-a442-1cc5059e41a6.mp4",
             ),
             PostUIItem(
                 1,

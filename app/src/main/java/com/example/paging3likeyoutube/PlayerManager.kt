@@ -121,11 +121,6 @@ import androidx.media3.ui.PlayerView
             return
         }
 
-        if (player != null) {
-            player?.release()
-            player = null
-        }
-
         val trackSelector = DefaultTrackSelector(context).apply {
             setParameters(buildUponParameters().setMaxVideoSizeSd())
         }
@@ -138,6 +133,7 @@ import androidx.media3.ui.PlayerView
                 .build()
 
         val mediaSource = MediaItem.fromUri(videoUri) /*getMediaSource(context)*/
+        player?.setMediaItem(mediaSource)
 
        /* if (loopVideo) {
             // Looping source
@@ -148,9 +144,7 @@ import androidx.media3.ui.PlayerView
             player?.prepare(mediaSource, true, false)
         }*/
 
-        player?.setMediaItem(mediaSource)
-
-        player?.clearVideoSurface()
+       // player?.clearVideoSurface()
         when (exoPlayerView.videoSurfaceView) {
             is TextureView -> {
                 player?.setVideoTextureView(exoPlayerView.videoSurfaceView as TextureView)
@@ -161,6 +155,11 @@ import androidx.media3.ui.PlayerView
         }
 
         setPlayerSettings()
+
+        if (player != null) {
+            player?.release()
+            player = null
+        }
     }
 
     /*private fun getMediaSource(context: Context): MediaSource {

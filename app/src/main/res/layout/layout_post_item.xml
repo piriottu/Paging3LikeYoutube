@@ -22,7 +22,7 @@
         android:id="@+id/video_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
@@ -33,6 +33,7 @@
     <com.google.android.material.imageview.ShapeableImageView
         android:layout_width="match_parent"
         android:id="@+id/placeholder"
+        android:visibility="gone"
         android:background="@color/purple_200"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintTop_toTopOf="parent"
