@@ -32,7 +32,6 @@ class HomeFragment : Fragment(), PostAdapter.Listener {
         PostAdapter(this)
     }
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -42,20 +41,12 @@ class HomeFragment : Fragment(), PostAdapter.Listener {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        binding.recyclerView.adapter=adapter
+        binding.recyclerView.adapter = adapter
 
-        binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                if (newState == RecyclerView.SCROLL_STATE_IDLE){
-                    //viewModel.pauseVideo()
-                }
-            }
-        })
-
-        viewModel.playVideo(0)
+        viewModel.showItems()
         viewModel.video.observe(viewLifecycleOwner) {
             adapter.submitList(it)
+            adapter.playPosition = 0
         }
         return root
     }
@@ -66,16 +57,16 @@ class HomeFragment : Fragment(), PostAdapter.Listener {
     }
 
     override fun onPlayVideo(position: Int) {
-        viewModel.playVideo(position)
+       // viewModel.playVideo(position)
     }
 
-  /*  fun initPlayPosition() {
-        var index = 0
-        do {
-            if (isVideoItem(index)) {
-                playPosition = index
-            }
-            index += 1
-        } while (playPosition == -1 && index >= homeFeed.size - 1)
-    }*/
+    /*  fun initPlayPosition() {
+          var index = 0
+          do {
+              if (isVideoItem(index)) {
+                  playPosition = index
+              }
+              index += 1
+          } while (playPosition == -1 && index >= homeFeed.size - 1)
+      }*/
 }

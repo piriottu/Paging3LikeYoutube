@@ -5,6 +5,7 @@ import androidx.media3.common.util.UnstableApi
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+
 @UnstableApi
 class PostAdapter(private val listener: Listener) :
     ListAdapter<PostUIItem, PostViewHolder>(DIFF_CALLBACK) {
@@ -13,7 +14,7 @@ class PostAdapter(private val listener: Listener) :
         fun onPlayVideo(position: Int)
     }
 
-    var playPosition:Int = -1
+    var playPosition: Int = -1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
         return PostViewHolder(
