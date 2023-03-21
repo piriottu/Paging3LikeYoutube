@@ -3,6 +3,7 @@ package com.example.paging3likeyoutube.ui.home
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,95 +36,89 @@ class PostViewHolder(
     RecyclerView.ViewHolder(binding.root) {
 
     private lateinit var player: ExoPlayer
-
     private lateinit var itemRef: PostUIItem
+
+    private val playbackStateListener: Player.Listener = playbackStateListener()
 
     //state variable for the player
     private var playerInitialized = false
-    private var audioOn = true
+    private var audioOn = false
     private var videoOn = false
 
     init {
         setupVideoView()
 
-        /* binding.play.setOnClickListener {
-             if (videoOn) {
-                 onDetach()
-             } else {
-                 onAttach()
-             }
-         }*/
+        binding.audio.setOnClickListener {
+            audioOn = !audioOn
+            player.volume = if (audioOn) 1f else 0f
+        }
     }
 
-     //region public methods
-     private fun onAttach() {
-         audioOn = true
-         videoOn = true
-         updatePlayerStatus()
-     }
-
-     private fun onDetach() {
-         audioOn = false
-         videoOn = false
-         //player.clearVideoSurface()
-         updatePlayerStatus()
-         playerInitialized = false
-     }
+    fun bind(item: PostUIItem, canPlay: Boolean) {
+        itemRef = item
+        setCoverImage(itemRef.url, canPlay)
+    }
 
     fun setPlayer() {
-        binding.placeholder.setBackgroundColor(Color.BLUE)
 
         //set video
         if (playerInitialized.not()) {
             initializePlayer(itemRef.url)
             playerInitialized = true
+            onAttach()
         }
+        Log.d("niko", "id : ${itemRef.id} - canPlay true")
+        /*   val url = itemRef.url
 
-        onAttach()
+            val playerManager =
+                HandlerPlayerManager.instance.getPlayerInstance(url)
+            val settings = PlayerManager.PlayerSettings(
+                loopVideo = true,
+                audio = false,
+                listener = object : PlayerManager.PlayerListener {
+                    override fun endBlock() {}
 
-    /*   val url = itemRef.url
+                    override fun onBlock(block: PlayerManager.PlayerBlock) {}
 
-        val playerManager =
-            HandlerPlayerManager.instance.getPlayerInstance(url)
-        val settings = PlayerManager.PlayerSettings(
-            loopVideo = true,
-            audio = false,
-            listener = object : PlayerManager.PlayerListener {
-                override fun endBlock() {}
+                    override fun onVideoEnded() {}
 
-                override fun onBlock(block: PlayerManager.PlayerBlock) {}
+                    override fun onBuffering() {}
 
-                override fun onVideoEnded() {}
+                    override fun onReady() {
+                        binding.videoView.isVisible = true
+                        binding.placeholder.isVisible = false
+                    }
 
-                override fun onBuffering() {}
+                    override fun onError() {
+                        binding.videoView.visibility = View.INVISIBLE
+                        binding.placeholder.isVisible = true
+                    }
 
-                override fun onReady() {
-                    binding.videoView.isVisible = true
-                    binding.placeholder.isVisible = false
-                }
+                })
 
-                override fun onError() {
-                    binding.videoView.visibility = View.INVISIBLE
-                    binding.placeholder.isVisible = true
-                }
+            playerManager.preparePlayer(
+                binding.root.context,
+                binding.videoView,
+                settings
+            )
 
-            })
-
-        playerManager.preparePlayer(
-            binding.root.context,
-            binding.videoView,
-            settings
-        )
-
-        val player = playerManager.player
-        // Set ExoPlayer to player view
-        binding.videoView.player = player*/
+            val player = playerManager.player
+            // Set ExoPlayer to player view
+            binding.videoView.player = player*/
     }
 
-    fun bind(item: PostUIItem, canPlay: Boolean) {
-        itemRef = item
+    //region public methods
+    private fun onAttach() {
+        audioOn = true
+        videoOn = true
+        updatePlayerStatus()
+    }
 
-        setCoverImage(itemRef.url, canPlay)
+    private fun onDetach() {
+        playerInitialized = false
+        audioOn = false
+        videoOn = false
+        updatePlayerStatus()
     }
 
     private fun setupVideoView() {
@@ -138,13 +133,9 @@ class PostViewHolder(
             }
 
         player.addListener(object : Player.Listener {
-            override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
-                //  startPlayer()
-            }
+            override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {}
 
-            override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
-                // startPlayer()
-            }
+            override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {}
         })
     }
 
@@ -156,52 +147,30 @@ class PostViewHolder(
         player.repeatMode = Player.REPEAT_MODE_ALL
         player.videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING
         player.volume = if (audioOn) 1f else 0f
+        player.addListener(playbackStateListener)
+        player.playWhenReady = true
         player.prepare()
     }
 
     private fun setCoverImage(videoUrl: String?, canPlay: Boolean) {
 
-       /* Glide.with(binding.root.context)
+        Glide.with(binding.root.context)
             .load(videoUrl)
             .error(R.drawable.ic_dashboard_black_24dp)
             .placeholder(R.drawable.ic_dashboard_black_24dp)
             .centerCrop()
-            .addListener(object : RequestListener<Drawable> {
+            .into(binding.placeholder)
 
-                override fun onLoadFailed(
-                    e: GlideException?,
-                    model: Any?,
-                    target: Target<Drawable>?,
-                    isFirstResource: Boolean
-                ): Boolean {
-                    if (canPlay) {
-                        setPlayer()
-                    }
-                    return false
-                }
+        Log.d("niko", "id : ${itemRef.id} - canPlay $canPlay")
 
-                override fun onResourceReady(
-                    resource: Drawable?,
-                    model: Any?,
-                    target: Target<Drawable>?,
-                    dataSource: com.bumptech.glide.load.DataSource?,
-                    isFirstResource: Boolean
-                ): Boolean {
-                    if (canPlay) {
-                        setPlayer()
-                    }
-                    return false
-                }
 
-            })
-            .into(binding.placeholder)*/
-
-          if (canPlay) {
-              binding.placeholder.setBackgroundColor(Color.BLUE)
-          } else {
-              onDetach()
-              binding.placeholder.setBackgroundColor(Color.RED)
-          }
+        if (canPlay) {
+            binding.placeholder.setBackgroundColor(Color.BLUE)
+        } else {
+            onDetach()
+            binding.placeholder.isVisible = true
+            binding.videoView.isVisible = false
+        }
     }
 
     private fun updatePlayerStatus() {
@@ -216,6 +185,24 @@ class PostViewHolder(
             else
                 R.drawable.ic_baseline_volume_off
         )*/
+    }
+
+    private fun playbackStateListener() = object : Player.Listener {
+        override fun onPlaybackStateChanged(playbackState: Int) {
+            when (playbackState) {
+                ExoPlayer.STATE_IDLE -> "ExoPlayer.STATE_IDLE      -"
+                ExoPlayer.STATE_BUFFERING -> {
+                    binding.placeholder.isVisible = true
+                    binding.videoView.isVisible = false
+                }
+                ExoPlayer.STATE_READY -> {
+                    binding.placeholder.isVisible = false
+                    binding.videoView.isVisible = true
+                }
+                ExoPlayer.STATE_ENDED -> "ExoPlayer.STATE_ENDED     -"
+                else -> "UNKNOWN_STATE             -"
+            }
+        }
     }
 
     companion object {

@@ -115,7 +115,7 @@ import kotlin.math.abs
         child.getLocationOnScreen(location)
 
         val displayMetrics = DisplayMetrics()
-        //context.applicationContext.display?.getre
+
         context.getSystemService(WindowManager::class.java).defaultDisplay.getMetrics(displayMetrics)
         val heightScreen = displayMetrics.heightPixels
 
