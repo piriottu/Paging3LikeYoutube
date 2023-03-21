@@ -114,7 +114,7 @@ class PostViewHolder(
         updatePlayerStatus()
     }
 
-    private fun onDetach() {
+     fun onDetach() {
         playerInitialized = false
         audioOn = false
         videoOn = false

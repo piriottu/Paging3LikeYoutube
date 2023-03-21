@@ -28,6 +28,11 @@ class PostAdapter(private val listener: Listener) :
         holder.bind(getItem(position), canPlay = position == playPosition)
     }
 
+    override fun onViewDetachedFromWindow(holder: PostViewHolder) {
+        super.onViewDetachedFromWindow(holder)
+        holder.onDetach()
+    }
+
     companion object {
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<PostUIItem>() {
             override fun areItemsTheSame(
