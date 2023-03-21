@@ -48,7 +48,7 @@ class HomeFragment : Fragment(), PostAdapter.Listener {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (newState == RecyclerView.SCROLL_STATE_IDLE){
-                    viewModel.pauseVideo()
+                    //viewModel.pauseVideo()
                 }
             }
         })
@@ -68,4 +68,14 @@ class HomeFragment : Fragment(), PostAdapter.Listener {
     override fun onPlayVideo(position: Int) {
         viewModel.playVideo(position)
     }
+
+  /*  fun initPlayPosition() {
+        var index = 0
+        do {
+            if (isVideoItem(index)) {
+                playPosition = index
+            }
+            index += 1
+        } while (playPosition == -1 && index >= homeFeed.size - 1)
+    }*/
 }
